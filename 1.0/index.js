@@ -48,19 +48,64 @@ KISSY.add(function (S, Node,Base) {
                 self._parseCollide();
             },30); 
 
-            setTimeout(function(){
-                clearInterval(self.setInterval);
-            },10000)
+            // setTimeout(function(){
+            //     clearInterval(self.setInterval);
+            // },10000)
 
-            self._createFall({
-                width : 20,
-                height : 20,
-                left : 300,
-                speed : 5,
-                time : 40,
-                className:'fall'
-            });
+            
+            self._setFall();
 		},
+        /**
+         * [setFall description]
+         */
+        _setFall : function(){
+            var self = this;
+            var fallList = self.cfg.fall;
+
+            var list = [],
+                obj = {};
+            for(var i=0,len=fallList.length,n=0;i<len;i++){
+                var item = fallList[i];
+                for(var j=0,l=item.size;j<l;j++){
+                    n++;
+                    list.push(n);
+                    obj[n] = item;
+                }
+            }
+            
+            var indexs = self.getRandomNub(list,list.length),
+                len = indexs.length - 1;
+
+            var timeout = (self.cfg.time == undf ? 60000 : self.cfg.time) / len;
+
+            create(0);
+            
+            function create(i){
+                var item = obj[indexs[i]],
+                    width = item.width == undf ? 10 : item.width,
+                    height = item.height == undf ? 10 : item.height,
+                    left = item.left == undf ? self.getRandomNub(self.getArrData(0,self._maxWidth),1)[0] : item.left,
+                    speed = item.speed == undf ? self.getRandomNub(self.getArrData(0,10),1)[0] : item.speed,
+                    time = item.time == undf ? self.getRandomNub(self.getArrData(0,50),1)[0] : item.time,
+                    className = item.className == undf ? 'fall' : item.className;
+                
+                self._createFall({
+                    width : width,
+                    height : height,
+                    left : left,
+                    speed : speed,
+                    time : time,
+                    className:className
+                });
+
+                if(i == len){
+                    return;
+                }
+                setTimeout(function(){
+                    create(++i);
+                },timeout);
+            }
+        },
         /**
          * 设置最大值
          */
@@ -231,14 +276,32 @@ KISSY.add(function (S, Node,Base) {
                 mTop = self._mainPos.top,
                 mLeft = self._mainPos.left,
                 direc = self._direc,
-                overValue = 20;
+                overValue = 50;
+
+            var itemCallback = self.cfg.itemCallback;
 
             for(var i in self._fallObj){
                 var item = self._fallObj[i];
-                if(Math.abs(item.left - mLeft) < overValue && Math.abs(item.top - mTop) < overValue){
+                if(Math.abs(item.left - mLeft) < 10 && Math.abs(item.top - mTop) < 100){
                     item.dom.remove();
+                    if(itemCallback){
+                        itemCallback();
+                    }
                 }
             }
+        },
+        /**
+         * 创建i到n的数组
+         * @param  {[int]} s 开始
+         * @param  {[int]} n 结束
+         * @return {[array]}
+         */
+        getArrData : function(s,n){
+            var result = [];
+            for(var i = s; i < n; i++){
+                result.push(i);
+            }
+            return result;
         },
          /**
          * 从数组中随机数

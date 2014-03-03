@@ -9,26 +9,50 @@
         .demo{
             position: relative;
             width:990px;
-            height: 350px;
+            height: 550px;
             margin:30px auto;
             border:1px solid #eee;
             overflow: hidden;
-        }
-        .fall{
-            position: absolute;
-            width:10px;
-            height:10px;
-            border:1px solid #f00;
-            top:0;
-            left:0;
         }
         .bed{
             border:1px solid #00f;
             position: absolute;
         }
+        .redHeart,
+        .yellowHeart,
+        .phone,
+        .pad,
+        .computer{
+            width:28px;
+            height:14px;
+            background: url(img.png);
+            position: absolute;
+        }
+        .redHeart{
+            background-position: 0 0;
+        }
+        .yellowHeart{
+            background-position: 0 -13px;
+        }
+        .phone{
+            background-position: 0 -28px;
+        }
+        .pad{
+            background-position: 0 -44px;
+        }
+        .computer{
+            background-position: 0 -57px;
+        }
     </style>
 </head>
 <body>
+<!--
+<div class="redHeart"></div>
+<div class="yellowHeart"></div>
+<div class="phone"></div>
+<div class="pad"></div>
+<div class="computer"></div>-->
+<div></div>
 <div id="J_test" class="demo"></div>
 
 <script>
@@ -51,38 +75,38 @@
     S.use('gallery/catch/1.0/index', function (S, Catch) {
           new Catch('#J_test',{
                 //size 为1分钟内掉落的个数
-                'fall':{
-                    'redHeart':{
+                'fall':[
+                    {
                         'className' : 'redHeart',
                         'size':30,
-                        'width' : 10,
-                        'height' : 10
-                    },
-                    'yellowHeart':{
+                        'width' : 28,
+                        'height' : 14
+                    }/*,
+                    {
                         'className':'yellowHeart',
                         'size':30,
-                        'width' : 10,
-                        'height' : 10
+                        'width' : 28,
+                        'height' : 14
                     },
-                    'phone':{
+                    {
                         'className' : 'phone',
                         'size' : 30,
-                        'width' : 10,
-                        'height' : 10
+                        'width' : 28,
+                        'height' : 14
                     },
-                    'pad':{
+                    {
                         'className' : 'pad',
                         'size' : 10,
-                        'width' : 10,
-                        'height' : 10
+                        'width' : 28,
+                        'height' : 14
                     },
-                    'computer':{
+                    {
                         'className' : 'computer',
                         'size' : 5,
-                        'width' : 10,
-                        'height' : 10
-                    }
-                },
+                        'width' : 28,
+                        'height' : 14
+                    }*/
+                ],
                 //主体
                 'main':{
                     className : 'bed',
@@ -92,9 +116,20 @@
                     direc:'lateral'
                 },
                 maxWidth : 990,
-                maxHeight : 350
+                maxHeight : 550,
+                time:60000,//游戏时长
+                itemCallback : itemCallback,
+                gameOverCallback : gameOverCallback
           });
-    })
+    });
+
+    function itemCallback(){
+        console.log('itemCallback');
+    }
+
+    function gameOverCallback(){
+        console.log('gameOverCallback');
+    }
 </script>
 </body>
 </html>
