@@ -9,7 +9,7 @@
         .demo{
             position: relative;
             width:990px;
-            height: 550px;
+            height: 350px;
             margin:30px auto;
             border:1px solid #eee;
             overflow: hidden;
@@ -29,8 +29,6 @@
     </style>
 </head>
 <body>
-<h2>Catch的demo</h2>
-
 <div id="J_test" class="demo"></div>
 
 <script>
@@ -90,8 +88,11 @@
                     className : 'bed',
                     width:50,
                     height:80,
-                    top : 438
-                }
+                    //top : 438,
+                    direc:'lateral'
+                },
+                maxWidth : 990,
+                maxHeight : 350
           });
     })
 </script>

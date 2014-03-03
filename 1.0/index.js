@@ -25,6 +25,7 @@ KISSY.add(function (S, Node,Base) {
         _maxHeight : 550,
         _maxWidth : 990,
         Jnode : null,
+        _direc:'free',//方向
         /**
          * 初始化
          */
@@ -32,14 +33,42 @@ KISSY.add(function (S, Node,Base) {
             var self = this;
             
             //检查配置项
-            if(!self.checkCfg()){
+            if(!self._checkCfg()){
                 return null;
             }
 
+            //设置最大值
+            self._setMaxValue();
 
             //创建主体
-            self.createMainBox(self.getMainCfg());            
+            self._createMainBox(self.getMainCfg());    
+
+            //定时扫描接触点
+            self.setInterval = setInterval(function(){
+                self._parseCollide();
+            },30); 
+
+            setTimeout(function(){
+                clearInterval(self.setInterval);
+            },10000)
+
+            self._createFall({
+                width : 20,
+                height : 20,
+                left : 300,
+                speed : 5,
+                time : 40,
+                className:'fall'
+            });
 		},
+        /**
+         * 设置最大值
+         */
+        _setMaxValue : function(){
+            var self = this;
+            self._maxWidth = self.cfg.maxWidth == undf ? self.Jnode.width() : self.cfg.maxWidth;
+            self._maxHeight = self.cfg.maxHeight == undf ? self.Jnode.height() : self.cfg.maxHeight;
+        },
         /**
          * 获取主体的配置项
          * @return {obj} cfg
@@ -48,30 +77,37 @@ KISSY.add(function (S, Node,Base) {
             var self = this;
             var mCfg = self.cfg['main'];
             var height = mCfg.height == undf ? 100 : mCfg.height;
+            var direc = mCfg.direc == undf ? 'free' : mCfg.direc;
+            self._direc  = direc;
             return {
                 width : mCfg.width == undf ? 50 : mCfg.width,
                 height : height,
                 className : mCfg.className == undf ? 'mainBox' : mCfg.className,
-                top : mCfg.top == undf ? self.Jnode.height() - height -10 : mCfg.top
+                top : mCfg.top == undf ? self.Jnode.height() - height -10 : mCfg.top,
+                direc : direc
             };
-
         },
         /**
          * 检查配置项
          * @return {boo} 
          */
-        checkCfg : function(){
+        _checkCfg : function(){
             if(this.cfg == undf || this.cfg['main'] == undf){
                 alert('配置不全！')
             }
             return true;
         },
+
+        _fallObj : {},
+        _i : 0,
         /**
          * 创建下坠物体
          */
-        createFall : function(cfg){
+        _createFall : function(cfg){
             var self = this;
             var dom = $('<div></div>');
+
+            self._i ++;
 
             if(cfg.className){
                 dom.addClass(cfg.className);
@@ -92,32 +128,43 @@ KISSY.add(function (S, Node,Base) {
             if(cfg.left){
                 dom.css('left',cfg.left);
             }
-
+            self._fallObj[self._i] = {
+                dom:dom,
+                top:cfg.top,
+                left:cfg.left
+            };
+            
             self.Jnode.append(dom);
 
-            self.fallMove(dom,cfg);
+            self._fallMove(dom,cfg,self._i);
         },
         /**
          * 下载物体移动
          */
-        fallMove : function(dom,cfg){
+        _fallMove : function(dom, cfg, i){
             var self = this;
 
             cfg.top += cfg.speed;
 
             dom.css('top',cfg.top);
 
+            self._fallObj[i]['top'] = cfg.top;
+            self._fallObj[i]['left'] = cfg.left;
+
             if(cfg.top > self._maxHeight){
                 return;
             }
+
             setTimeout(function(){
-                self.fallMove(dom, cfg);
+                self._fallMove(dom, cfg, i);
             },cfg.time);
         },
+        //主体的位置
+        _mainPos : {},
         /**
          * 创建主体
          */
-        createMainBox : function(cfg){
+        _createMainBox : function(cfg){
             var self = this;
             var mainBox = $('<div></div>');
             if(cfg.className){
@@ -140,20 +187,58 @@ KISSY.add(function (S, Node,Base) {
 
             self.Jnode.append(mainBox);
 
-            self.moveMainBox(mainBox, cfg.top, cfg.width);
+            self._moveMainBox(mainBox, cfg.top,mainBox.offset().left, cfg.direc);
         },
         /**
          * 移动主体
          */
-        moveMainBox : function(mainBox, top){
+        _moveMainBox : function(mainBox, top, left, direc){
             var self = this;
             var overLeft = parseInt(self.Jnode.offset().left),
+                overTop = parseInt(self.Jnode.offset().top) + mainBox.height()/2
                 maxWidth = self._maxWidth;
             
             self.Jnode.on('mousemove',function(e){
-                var left = e.clientX - overLeft;                
-                mainBox.css('left',e.clientX - overLeft)
+                var newLeft = e.clientX - overLeft,
+                    newTop  = e.clientY - overTop;
+                var changeCass = {};
+                switch(direc){
+                    default:
+                    case 'free':
+                        changeCass = {'left':newLeft,'top':newTop};
+                        self._mainPos = {'top':newTop,left:newLeft};
+                        break;
+                    case 'lateral':
+                        changeCass = {'left':newLeft};
+                        self._mainPos = {'top':top,'left':newLeft};
+                        break;
+                    case 'longitudinal':
+                        changeCass = {'top':newTop};
+                        self._mainPos = {'top':newTop,'left':left};
+                        break;
+                }
+                mainBox.css(changeCass);
+
+               
             });
+        },
+        /**
+         * 计算碰撞
+         * @return {[type]} [description]
+         */
+        _parseCollide : function(){
+            var self = this,
+                mTop = self._mainPos.top,
+                mLeft = self._mainPos.left,
+                direc = self._direc,
+                overValue = 20;
+
+            for(var i in self._fallObj){
+                var item = self._fallObj[i];
+                if(Math.abs(item.left - mLeft) < overValue && Math.abs(item.top - mTop) < overValue){
+                    item.dom.remove();
+                }
+            }
         },
          /**
          * 从数组中随机数
