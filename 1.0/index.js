@@ -288,7 +288,7 @@ KISSY.add(function (S, Node,Base) {
                         itemCallback();
                     }
                 }
-            }
+            } 
         },
         /**
          * 创建i到n的数组
