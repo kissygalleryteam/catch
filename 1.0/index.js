@@ -89,6 +89,11 @@ KISSY.add(function (S, Node,Base) {
                     time = item.time == undf ? self.getRandomNub(self.getArrData(0,50),1)[0] : item.time,
                     className = item.className == undf ? 'fall' : item.className;
                 
+                //如果left大于画布宽度，那么left -10
+                if(left+width > self._maxWidth){
+                    left = self._maxWidth - width - 10;
+                }
+
                 self._createFall({
                     width : width,
                     height : height,
@@ -189,6 +194,10 @@ KISSY.add(function (S, Node,Base) {
         _fallMove : function(dom, cfg, i){
             var self = this;
 
+            if(self._fallObj[i] == undf){
+                return;
+            }
+
             cfg.top += cfg.speed;
 
             dom.css('top',cfg.top);
@@ -197,6 +206,7 @@ KISSY.add(function (S, Node,Base) {
             self._fallObj[i]['left'] = cfg.left;
 
             if(cfg.top > self._maxHeight){
+                delete self._fallObj[i];
                 return;
             }
 
@@ -232,6 +242,10 @@ KISSY.add(function (S, Node,Base) {
 
             self.Jnode.append(mainBox);
 
+            self._mainBoxWidth = cfg.width;
+            self._mainBoxHeight = cfg.height;
+            self._mainPos = {'top':cfg.top,'left':mainBox.offset().left};
+
             self._moveMainBox(mainBox, cfg.top,mainBox.offset().left, cfg.direc);
         },
         /**
@@ -239,8 +253,9 @@ KISSY.add(function (S, Node,Base) {
          */
         _moveMainBox : function(mainBox, top, left, direc){
             var self = this;
-            var overLeft = parseInt(self.Jnode.offset().left),
-                overTop = parseInt(self.Jnode.offset().top) + mainBox.height()/2
+            var boxOffset = self.Jnode.offset(),
+                overLeft = parseInt(boxOffset.left),
+                overTop = parseInt(boxOffset.top) + mainBox.height()/2,
                 maxWidth = self._maxWidth;
             
             self.Jnode.on('mousemove',function(e){
@@ -276,17 +291,23 @@ KISSY.add(function (S, Node,Base) {
                 mTop = self._mainPos.top,
                 mLeft = self._mainPos.left,
                 direc = self._direc,
-                overValue = 50;
+                overValue = 10,
+                mWidth = self._mainBoxWidth,
+                mHeight = self._mainBoxHeight;
 
             var itemCallback = self.cfg.itemCallback;
+            var ml2 = mLeft - mWidth/2;
 
             for(var i in self._fallObj){
                 var item = self._fallObj[i];
-                if(Math.abs(item.left - mLeft) < 10 && Math.abs(item.top - mTop) < 100){
+                if(item == undf){
+                    continue;
+                }
+                //if(mTop - 10 <= item.top && (mTop + boxHeight + 10) >= item.top){
+                //console.log(mLeft +'---'+item.left +'---'+mTop +'--'+item.top);
+                if(ml2 <= item.left && ml2 + mWidth >= item.left && mTop <= item.top && mTop + mHeight >= item.top){
                     item.dom.remove();
-                    if(itemCallback){
-                        itemCallback();
-                    }
+                    delete self._fallObj[i];
                 }
             }
         },

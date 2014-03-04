@@ -27,6 +27,7 @@
             height:14px;
             background: url(img.png);
             position: absolute;
+            border:1px solid #F00;
         }
         .redHeart{
             background-position: 0 0;
@@ -80,7 +81,9 @@
                         'className' : 'redHeart',
                         'size':30,
                         'width' : 28,
-                        'height' : 14
+                        'height' : 14,
+                        'speed' : 6,
+                        'time':30
                     }/*,
                     {
                         'className':'yellowHeart',
@@ -112,12 +115,12 @@
                     className : 'bed',
                     width:50,
                     height:80,
-                    //top : 438,
+                   // top : 260,
                     direc:'lateral'
                 },
                 maxWidth : 990,
                 maxHeight : 550,
-                time:60000,//游戏时长
+                time:10000,//游戏时长
                 itemCallback : itemCallback,
                 gameOverCallback : gameOverCallback
           });
