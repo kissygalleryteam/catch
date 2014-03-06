@@ -2,13 +2,14 @@
     "name": "catch",
     "comName":"Catch",
     "version": "1.0",
-    "desc": "",
+    "desc": "接着下坠物游戏组件",
+    "cover":"http://gtms04.alicdn.com/tps/i4/T1Pp18FpVXXXbCFbsb-100-100.jpg",
     "tag":"接物体游戏",
     "githubName":"xiaowuming",
     "author": {
         "name": "顺堂",
         "email": "wuming.xiaowm@taobao.com",
-        "page": ""
+        "page": "https://github.com/xiaowuming/"
     },
 	"flexComboPort":"81",
 	"reserveServerPort":"8080",
