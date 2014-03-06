@@ -55,8 +55,9 @@
 <div class="computer"></div>-->
 <div></div>
 <div id="J_test" class="demo"></div>
-
+<div id="J_result" style="position:absolute;top:0;left:0;color:#f00">0</div>
 <script>
+    var i = 0;
     var S = KISSY;
     S.Config.debug = true;
     if (S.Config.debug) {
@@ -83,32 +84,41 @@
                         'width' : 28,
                         'height' : 14,
                         'speed' : 6,
-                        'time':30
-                    }/*,
+                        'time':30,
+                        'type':1
+                    },
                     {
                         'className':'yellowHeart',
                         'size':30,
                         'width' : 28,
-                        'height' : 14
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':2
                     },
                     {
                         'className' : 'phone',
                         'size' : 30,
                         'width' : 28,
-                        'height' : 14
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':3
                     },
                     {
                         'className' : 'pad',
                         'size' : 10,
                         'width' : 28,
-                        'height' : 14
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':4
                     },
                     {
                         'className' : 'computer',
                         'size' : 5,
                         'width' : 28,
-                        'height' : 14
-                    }*/
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':5
+                    }
                 ],
                 //主体
                 'main':{
@@ -120,14 +130,17 @@
                 },
                 maxWidth : 990,
                 maxHeight : 550,
-                time:10000,//游戏时长
+                time:180000,//游戏时长
                 itemCallback : itemCallback,
                 gameOverCallback : gameOverCallback
           });
     });
-
-    function itemCallback(){
-        console.log('itemCallback');
+    
+    
+    function itemCallback(type){
+        if(type == 3){
+            console.log('接到手机');
+        }
     }
 
     function gameOverCallback(){

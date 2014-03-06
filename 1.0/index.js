@@ -22,6 +22,8 @@ KISSY.add(function (S, Node,Base) {
     }
     
 	Catch.prototype = {
+        //游戏加速
+        _gameSpeedUp : 1,
         _maxHeight : 550,
         _maxWidth : 990,
         Jnode : null,
@@ -40,23 +42,66 @@ KISSY.add(function (S, Node,Base) {
             //设置最大值
             self._setMaxValue();
 
-            //创建主体
-            self._createMainBox(self.getMainCfg());    
-
-            //定时扫描接触点
-            self.setInterval = setInterval(function(){
-                self._parseCollide();
-            },30); 
-
-            // setTimeout(function(){
-            //     clearInterval(self.setInterval);
-            // },10000)
-
-            
-            self._setFall();
 		},
         /**
-         * [setFall description]
+         * 开始游戏
+         */
+        start : function(){
+            var self = this;
+            //设置状态
+            self._runStatus = true;
+            //开启任务定时跑
+            self['setInterval']();
+
+            //创建主体
+            self._createMainBox(self.getMainCfg());    
+            //创建下坠物体
+            self._setFall();
+
+            //加速
+            self._speedUp();
+        },
+        _runStatus : false,
+        /**
+         * 停止游戏
+         */
+        stop : function(){
+            var self = this;
+            self._runStatus = false;
+
+            //停止加速
+            self._stopSpeedUp();
+        },
+        /**
+         * 重新开始游戏
+         */
+        restart : function(){
+            var self = this;
+            //设置状态
+            self._runStatus = true;
+            //开启任务定时跑
+            self['setInterval']();
+            //显示主体
+            self._mainBox.show();
+
+            self._mainBox[0].className = self.cfg.main.className;
+
+            //下坠物体
+            for(var i in self._fallObj){
+                var item = self._fallObj[i];
+                item.dom.remove();
+                delete self._fallObj[i];
+            }
+
+            //创建下坠物体
+            self._setFall();
+            //重置速度
+            self._gameSpeedUp = 1;
+            //游戏加速
+            self._speedUp();
+        },
+        /**
+         * 创建下坠物体
          */
         _setFall : function(){
             var self = this;
@@ -78,8 +123,6 @@ KISSY.add(function (S, Node,Base) {
 
             var timeout = (self.cfg.time == undf ? 60000 : self.cfg.time) / len;
 
-            create(0);
-            
             function create(i){
                 var item = obj[indexs[i]],
                     width = item.width == undf ? 10 : item.width,
@@ -87,7 +130,8 @@ KISSY.add(function (S, Node,Base) {
                     left = item.left == undf ? self.getRandomNub(self.getArrData(0,self._maxWidth),1)[0] : item.left,
                     speed = item.speed == undf ? self.getRandomNub(self.getArrData(0,10),1)[0] : item.speed,
                     time = item.time == undf ? self.getRandomNub(self.getArrData(0,50),1)[0] : item.time,
-                    className = item.className == undf ? 'fall' : item.className;
+                    className = item.className == undf ? 'fall' : item.className,
+                    type = item.type == undf ? className : item.type
                 
                 //如果left大于画布宽度，那么left -10
                 if(left+width > self._maxWidth){
@@ -100,15 +144,40 @@ KISSY.add(function (S, Node,Base) {
                     left : left,
                     speed : speed,
                     time : time,
-                    className:className
+                    className:className,
+                    type : type
                 });
 
-                if(i == len){
+               
+
+                if(i == len || self._runStatus === false){
                     return;
                 }
+
                 setTimeout(function(){
-                    create(++i);
+                    i++
+                    if(i == len){
+                        setTimeout(function(){
+                            self._complete();
+                        },1000);
+                    }else{
+                        create(i);
+                    }
+                    
                 },timeout);
+            }
+
+            create(0);
+        },
+        /**
+         * 游戏完成
+         */
+        _complete : function(){
+            this['clearInterval']();
+            this.stop();
+            this._mainBox.hide();
+            if(this.cfg.completeCallback){
+                this.cfg.completeCallback();
             }
         },
         /**
@@ -143,7 +212,7 @@ KISSY.add(function (S, Node,Base) {
          */
         _checkCfg : function(){
             if(this.cfg == undf || this.cfg['main'] == undf){
-                alert('配置不全！')
+                alert('配置不全！');
             }
             return true;
         },
@@ -181,7 +250,8 @@ KISSY.add(function (S, Node,Base) {
             self._fallObj[self._i] = {
                 dom:dom,
                 top:cfg.top,
-                left:cfg.left
+                left:cfg.left,
+                type:cfg.type
             };
             
             self.Jnode.append(dom);
@@ -198,7 +268,11 @@ KISSY.add(function (S, Node,Base) {
                 return;
             }
 
-            cfg.top += cfg.speed;
+            if(self._runStatus === false){
+                return;
+            }
+
+            cfg.top += cfg.speed * self._gameSpeedUp;
 
             dom.css('top',cfg.top);
 
@@ -206,6 +280,7 @@ KISSY.add(function (S, Node,Base) {
             self._fallObj[i]['left'] = cfg.left;
 
             if(cfg.top > self._maxHeight){
+                self._fallObj[i].dom.remove();
                 delete self._fallObj[i];
                 return;
             }
@@ -213,6 +288,37 @@ KISSY.add(function (S, Node,Base) {
             setTimeout(function(){
                 self._fallMove(dom, cfg, i);
             },cfg.time);
+        },
+        _speedUpMap : [],
+        /**
+         * 游戏加速
+         */
+        _speedUp : function(){
+            var self = this;
+            if(self.cfg.speedUp == undf){
+                return;
+            }
+            self._speedUpMap = [];
+
+            for(var i=0;i<self.cfg.speedUp.length;i++){
+                var item = self.cfg.speedUp[i];
+                (function(item){
+                    var a = setTimeout(function(){
+                        self._gameSpeedUp = item.times;
+                    },item.delay);
+                    self._speedUpMap.push(a);
+                })(item);                
+            }
+
+        },
+        /**
+         * 停止加速
+         */
+        _stopSpeedUp : function(){
+            var self = this;
+            for(var i=0;i<self._speedUpMap.length;i++){
+                clearTimeout(self._speedUpMap[i]);
+            }
         },
         //主体的位置
         _mainPos : {},
@@ -241,26 +347,52 @@ KISSY.add(function (S, Node,Base) {
             mainBox.css({'left':'50%','margin-left':-cfg.width/2});
 
             self.Jnode.append(mainBox);
+            self._mainBox = mainBox;
 
             self._mainBoxWidth = cfg.width;
             self._mainBoxHeight = cfg.height;
             self._mainPos = {'top':cfg.top,'left':mainBox.offset().left};
 
-            self._moveMainBox(mainBox, cfg.top,mainBox.offset().left, cfg.direc);
+            self._moveMainBox(cfg.top,mainBox.offset().left, cfg.direc);
         },
         /**
          * 移动主体
          */
-        _moveMainBox : function(mainBox, top, left, direc){
-            var self = this;
+        _moveMainBox : function(top, left, direc){
+            var self = this,
+                mainBox = self._mainBox;
             var boxOffset = self.Jnode.offset(),
                 overLeft = parseInt(boxOffset.left),
                 overTop = parseInt(boxOffset.top) + mainBox.height()/2,
-                maxWidth = self._maxWidth;
+                maxWidth = self._maxWidth,
+                maxHeight = self._maxHeight,
+                mWidth = mainBox.width(),
+                mHeight = mainBox.height();
             
-            self.Jnode.on('mousemove',function(e){
+            $(document).on('mousemove',function(e){
+                e.preventDefault();
+                if(self._runStatus === false){
+                    self['clearInterval']();
+                    return;
+                }
                 var newLeft = e.clientX - overLeft,
                     newTop  = e.clientY - overTop;
+
+                //计算边界值
+                if(newLeft < 35 ){
+                    newLeft = 35;
+                }
+                if(newLeft + mWidth > maxWidth){
+                    newLeft = maxWidth - mWidth/2;
+                }
+
+                if(newTop < 0){
+                    newTop = 0;
+                }
+                if(newTop + mHeight > maxHeight){
+                    newTop = maxHeight - mHeight;
+                }
+
                 var changeCass = {};
                 switch(direc){
                     default:
@@ -277,9 +409,7 @@ KISSY.add(function (S, Node,Base) {
                         self._mainPos = {'top':newTop,'left':left};
                         break;
                 }
-                mainBox.css(changeCass);
-
-               
+                mainBox.css(changeCass);               
             });
         },
         /**
@@ -291,25 +421,50 @@ KISSY.add(function (S, Node,Base) {
                 mTop = self._mainPos.top,
                 mLeft = self._mainPos.left,
                 direc = self._direc,
-                overValue = 10,
+                overValue = 30,
                 mWidth = self._mainBoxWidth,
                 mHeight = self._mainBoxHeight;
 
-            var itemCallback = self.cfg.itemCallback;
-            var ml2 = mLeft - mWidth/2;
+            //游戏已经停止
+            if(self._runStatus === false){
+                self['clearInterval']();
+                return;
+            }           
 
             for(var i in self._fallObj){
                 var item = self._fallObj[i];
                 if(item == undf){
                     continue;
                 }
-                //if(mTop - 10 <= item.top && (mTop + boxHeight + 10) >= item.top){
-                //console.log(mLeft +'---'+item.left +'---'+mTop +'--'+item.top);
-                if(ml2 <= item.left && ml2 + mWidth >= item.left && mTop <= item.top && mTop + mHeight >= item.top){
+
+                if(mLeft - mWidth/2 - overValue <= item.left && mLeft - mWidth/2 + mWidth + overValue >= item.left && 
+                    mTop - overValue*2 <= item.top && mTop + mHeight + overValue >= item.top){
+
                     item.dom.remove();
+                    var type = item.type,
+                        left = item.left,
+                        top = item.top;
                     delete self._fallObj[i];
+                    if(self.cfg.itemCallback){
+                        self.cfg.itemCallback(self._mainBox, type, mLeft-mWidth/2, mTop-10);
+                    }
                 }
             }
+        },
+        /**
+         * 设置游戏定时器，定时扫描任务
+         */
+        setInterval : function(){
+            var self = this;
+            self._setInterval = setInterval(function(){
+                self._parseCollide();
+            },30); 
+        },
+        /**
+         * 停止游戏定时器
+         */
+        clearInterval : function(){
+            clearInterval(this._setInterval);
         },
         /**
          * 创建i到n的数组
