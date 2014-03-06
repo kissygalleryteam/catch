@@ -46,3 +46,7 @@ Catch是。
     })
 
 ## API说明
+    * 参数说明参考“初始化组件”
+    * 提供两个结果
+	catch.start();
+	catch.stop();
