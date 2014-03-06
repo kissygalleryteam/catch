@@ -2,7 +2,7 @@ body{
 	overflow-y: hidden;
 }
 .game{
-	background: url('demo/img/game_bg.png') center top no-repeat;
+	background: url('img/game_bg.png') center top no-repeat;
 	height: 550px;
 	min-width: 990px;
 	overflow: hidden;
@@ -20,7 +20,7 @@ body{
 .game .plus1,
 .game .plus2,
 .game .result-time{
-	background: url('demo/img/time.png') no-repeat;
+	background: url('img/time.png') no-repeat;
 	position: absolute;
 	width:108px;
 	height: 25px;
@@ -70,18 +70,18 @@ body{
 	width:1057px;
 	left:50%;
 	margin-left:-506px;
-	background: url('demo/img/welcome_2.png') no-repeat 0 0;
+	background: url('img/welcome_2.png') no-repeat 0 0;
 	z-index: 2;
 }
 .game .welcome .down{
-	background: url('demo/img/welcome_1.png') no-repeat #fff center bottom;
+	background: url('img/welcome_1.png') no-repeat #fff center bottom;
 	height: 550px;
 	z-index: 1;
 }
 .game .reople{
 	width:386px;
 	height:482px;
-	background:url('demo/img/welcome_3.png') 0 0 no-repeat;
+	background:url('img/welcome_3.png') 0 0 no-repeat;
 	position: absolute;
 	top: 180px;
 	left: 14%;
@@ -126,7 +126,7 @@ body{
 .game .phone,
 .game .pad,
 .game .computer{
-	background: url('demo/img/daoju.png') no-repeat;
+	background: url('img/daoju.png') no-repeat;
 }
 .game .play{
 	width:247px;
@@ -146,7 +146,7 @@ body{
 	background-position: 0 0;
 }
 .game .play .btn:hover{
-	background: url('demo/img/play.gif') no-repeat;
+	background: url('img/play.gif') no-repeat;
 	background-position: 43px 41px;
 }
 .game .btnRotate{
@@ -158,18 +158,18 @@ body{
 .game .bed{
 	width:122px;
 	height:175px;
-	background: url('demo/img/reople.gif');
+	background: url('img/reople.gif');
 	position: absolute;
 	z-index: 20;
 	bottom: 10px;
 	left:50%;
 	margin-left:-58px;
-	cursor:url('demo/img/no.ico'),auto;
+	cursor:url('img/no.ico'),auto;
 }
 .game .bed-normal,
 .game .bed-sad,
 .game .bed-happy{
-	background: url('demo/img/bed.png');
+	background: url('img/bed.png');
 	background-position: -139px 0;
 }
 .game .bed-normal{
@@ -254,19 +254,19 @@ body{
 	color:#fff;
 }
 .game .bg1{
-	background: url('demo/img/dialog_1.png') -27px -26px no-repeat;
+	background: url('img/dialog_1.png') -27px -26px no-repeat;
 }
 .game .bg2{
-	background: url('demo/img/dialog_2.png') -27px -26px no-repeat;
+	background: url('img/dialog_2.png') -27px -26px no-repeat;
 }
 .game .bg3{
-	background: url('demo/img/dialog_3.png') -27px -26px no-repeat;
+	background: url('img/dialog_3.png') -27px -26px no-repeat;
 }
 .game .bg4{
-	background: url('demo/img/dialog_4.png') -27px -26px no-repeat;
+	background: url('img/dialog_4.png') -27px -26px no-repeat;
 }
 .game .bg5{
-	background: url('demo/img/dialog_5.png') -27px -26px no-repeat;
+	background: url('img/dialog_5.png') -27px -26px no-repeat;
 }
 .game .close-btn,
 .game .share-btn,
