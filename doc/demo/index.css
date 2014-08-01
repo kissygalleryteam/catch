@@ -1,0 +1,321 @@
+body{
+	overflow-y: hidden;
+}
+.game{
+	background: url('img/game_bg.png') center top no-repeat;
+	height: 550px;
+	min-width: 990px;
+	overflow: hidden;
+	z-index: 1;
+	width: 100%;
+	position: relative;
+}
+.game .main{
+	width:990px;
+	height: 550px;
+	margin:0 auto;
+	position: relative;
+	z-index: 2;
+}
+.game .plus1,
+.game .plus2,
+.game .result-time{
+	background: url('img/time.png') no-repeat;
+	position: absolute;
+	width:108px;
+	height: 25px;
+}
+.game .plus2{
+	background-position: 0 0;
+}
+.game .plus1{
+	background-position: 0 -30px;
+}
+.game .result-time{
+	width:130px;
+	height: 35px;	
+	background-position: 27px -66px;
+	position: absolute;
+	right:40px;
+	top:5px;
+	color:#1597da;
+	z-index: 3;
+	font:30px/30px tahoma;
+}
+.result-time span{
+	text-align: right;
+	display: inline-block;
+	width:30px;
+	margin-right:30px;
+}
+.game .welcome{
+	height: 550px;
+	position: absolute;
+	left:0;
+	top:0;
+	width:100%;
+	min-width: 990px;
+	z-index: 8;
+	overflow: hidden;
+}
+.game .welcome .up,
+.game .welcome .down{
+	width:100%;
+	position: absolute;
+	top:0;
+	left:0;
+}
+.game .welcome .up{
+	height: 350px;
+	width:1057px;
+	left:50%;
+	margin-left:-506px;
+	background: url('img/welcome_2.png') no-repeat 0 0;
+	z-index: 2;
+}
+.game .welcome .down{
+	background: url('img/welcome_1.png') no-repeat #fff center bottom;
+	height: 550px;
+	z-index: 1;
+}
+.game .reople{
+	width:386px;
+	height:482px;
+	background:url('img/welcome_3.png') 0 0 no-repeat;
+	position: absolute;
+	top: 180px;
+	left: 14%;
+	z-index: 999;
+}
+@media screen and (max-width: 1020px){
+	.game .reople{
+		left:4%;
+	}
+}
+
+.game .reople1{
+	background-position: 0 0;
+}
+.game .reople1{
+	background-position: -386px 0;
+}
+.game .reople2{
+	background-position: -773px 0;
+}
+.game .reople3{
+	background-position: -1158px 0;
+}
+.game .reople4{
+	background-position: -1544px 0;
+}
+.game .reople5{
+	background-position: -1930px 0;
+}
+.game .close{
+	width:52px;
+	height: 52px;
+	position: absolute;
+	right:20px;
+	top:25px;
+	z-index: 3;
+}
+.game .play,
+.game .play .btn,
+.game .redHeart,
+.game .yellowHeart,
+.game .phone,
+.game .pad,
+.game .computer{
+	background: url('img/daoju.png') no-repeat;
+}
+.game .play{
+	width:247px;
+	height:133px;
+	position: absolute;
+	top:200px;
+	left:50%;
+	margin-left:-123px;	
+	background-position: 0 0;
+	z-index: 9;
+}
+.game .play .btn{
+	width:247px;
+	height:133px;
+	border:none;
+	outline: none;
+	background-position: 0 0;
+}
+.game .play .btn:hover{
+	background: url('img/play.gif') no-repeat;
+	background-position: 43px 41px;
+}
+.game .btnRotate{
+	-o-transform:rotate(-15deg); 
+	-moz-transform:rotate(-15deg); 
+	-webkit-transform:rotate(-15deg);
+	-ms-transform:rotate(-15deg);
+}
+.game .bed{
+	width:122px;
+	height:175px;
+	background: url('img/reople.gif');
+	position: absolute;
+	z-index: 20;
+	bottom: 10px;
+	left:50%;
+	margin-left:-58px;
+	cursor:url('img/no.ico'),auto;
+}
+.game .bed-normal,
+.game .bed-sad,
+.game .bed-happy{
+	background: url('img/bed.png');
+	background-position: -139px 0;
+}
+.game .bed-normal{
+	background-position: 0 0;
+}
+.game .bed-sad{
+	background-position: -270px 0;
+}
+.game .redHeart,
+.game .yellowHeart,
+.game .phone,
+.game .pad,
+.game .computer{
+	width:94px;
+	height: 102px;
+	position: absolute;
+}
+.game .redHeart{
+	background-position: -261px -16px;
+	left:100px;
+}
+.game .yellowHeart{
+	background-position: -373px -16px;
+	left:200px;
+}
+.game .phone{
+	background-position: -485px -16px;
+	left:300px;
+}
+.game .pad{
+	background-position: -610px -16px;
+	left:400px;
+}
+.game .computer{
+	background-position: -720px -16px;
+	left:500px;
+}
+
+
+.game .result{
+	width:690px;
+	height:437px;
+	position: absolute;
+	top:60px;
+	left:50%;
+	margin-left:-345px;
+}
+.game .result .minute,
+.game .result .hour{
+	font:30px/30px tahoma;
+}
+.game .result .hour{
+	position: absolute;
+	top: 52px;
+	left: 270px;
+	display: inline-block;
+	width: 85px;
+	text-align: center;
+}
+.game .result .minute{
+	position: absolute;
+	top: 52px;
+	left: 408px;
+}
+.game .bg3 .hour,
+.game .bg4 .hour,
+.game .bg5 .hour{
+	left:270px;
+} 
+.game .bg3 .minute,
+.game .bg4 .minute,
+.game .bg5 .minute{
+	left:406px;
+}
+.game .bg1,
+.game .bg2{
+	color:#ff8846;
+}
+.game .bg3,
+.game .bg4,
+.game .bg5{
+	color:#fff;
+}
+.game .bg1{
+	background: url('img/dialog_1.png') -27px -26px no-repeat;
+}
+.game .bg2{
+	background: url('img/dialog_2.png') -27px -26px no-repeat;
+}
+.game .bg3{
+	background: url('img/dialog_3.png') -27px -26px no-repeat;
+}
+.game .bg4{
+	background: url('img/dialog_4.png') -27px -26px no-repeat;
+}
+.game .bg5{
+	background: url('img/dialog_5.png') -27px -26px no-repeat;
+}
+.game .close-btn,
+.game .share-btn,
+.game .restart-btn{
+	position: absolute;
+	cursor: pointer;
+	border:none;
+	background:transparent;
+	outline: none;
+	width:130px;
+	height:60px;
+}
+.game .close-btn{
+	width:66px;
+	height: 66px;	
+	right:90px;
+	top:3px;
+}
+.game .share-btn{
+	top: 328px;
+	left:385px;
+}
+.game .restart-btn{
+	top: 328px;
+	left: 168px;
+}
+
+.cover{
+	width: 100%;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	position: fixed;
+	background-color: #000;
+	opacity: .6;
+	filter: alpha(opacity=60);
+	z-index: 1005 !important;
+}
+.game .speedTips{
+	font-size: 200px;
+	position: absolute;
+	z-index: 1000;
+	top:10%;
+	left:0;
+	width:100%;
+	text-align: center;
+	color:#f00;
+}
+.game .speedTips2{
+	-webkit-transform:scale(0.2);
+	-webkit-transition:all 0.3s ease; 
+}
