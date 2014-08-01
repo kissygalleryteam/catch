@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Catch的demo</title>
+    <script src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="http://g.tbcdn.cn/kissy/k/1.3.0/css/dpl/base-min.css">
+    <style type="text/css">
+        .demo{
+            position: relative;
+            width:990px;
+            height: 550px;
+            margin:30px auto;
+            border:1px solid #eee;
+            overflow: hidden;
+        }
+        .bed{
+            border:1px solid #00f;
+            position: absolute;
+        }
+        .redHeart,
+        .yellowHeart,
+        .phone,
+        .pad,
+        .computer{
+            width:28px;
+            height:14px;
+            background: url(img.png);
+            position: absolute;
+            border:1px solid #F00;
+        }
+        .redHeart{
+            background-position: 0 0;
+        }
+        .yellowHeart{
+            background-position: 0 -13px;
+        }
+        .phone{
+            background-position: 0 -28px;
+        }
+        .pad{
+            background-position: 0 -44px;
+        }
+        .computer{
+            background-position: 0 -57px;
+        }
+    </style>
+</head>
+<body>
+<!--
+<div class="redHeart"></div>
+<div class="yellowHeart"></div>
+<div class="phone"></div>
+<div class="pad"></div>
+<div class="computer"></div>-->
+<div></div>
+<div id="J_test" class="demo"></div>
+<div id="J_result" style="position:absolute;top:0;left:0;color:#f00">0</div>
+<script>
+    var i = 0;
+    var S = KISSY;
+    S.Config.debug = true;
+    if (S.Config.debug) {
+        var srcPath = "../../";
+        S.config({
+            packages:[
+                {
+                    name:"kg/catch",
+                    path:srcPath,
+                    charset:"utf-8",
+                    ignorePackageNameInUri:true
+                }
+            ]
+        });
+    }
+
+    S.use('kg/catch/2.0.0/index', function (S, Catch) {
+          new Catch('#J_test',{
+                //size 为1分钟内掉落的个数
+                'fall':[
+                    {
+                        'className' : 'redHeart',
+                        'size':30,
+                        'width' : 28,
+                        'height' : 14,
+                        'speed' : 6,
+                        'time':30,
+                        'type':1
+                    },
+                    {
+                        'className':'yellowHeart',
+                        'size':30,
+                        'width' : 28,
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':2
+                    },
+                    {
+                        'className' : 'phone',
+                        'size' : 30,
+                        'width' : 28,
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':3
+                    },
+                    {
+                        'className' : 'pad',
+                        'size' : 10,
+                        'width' : 28,
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':4
+                    },
+                    {
+                        'className' : 'computer',
+                        'size' : 5,
+                        'width' : 28,
+                        'speed' : 6,
+                        'height' : 14,
+                        'type':5
+                    }
+                ],
+                //主体
+                'main':{
+                    className : 'bed',
+                    width:50,
+                    height:80,
+                   // top : 260,
+                    direc:'lateral'
+                },
+                maxWidth : 990,
+                maxHeight : 550,
+                time:2.0.0000,//游戏时长
+                itemCallback : itemCallback,
+                gameOverCallback : gameOverCallback
+          });
+    });
+    
+    
+    function itemCallback(type){
+        if(type == 3){
+            console.log('接到手机');
+        }
+    }
+
+    function gameOverCallback(){
+        console.log('gameOverCallback');
+    }
+</script>
+</body>
+</html>
